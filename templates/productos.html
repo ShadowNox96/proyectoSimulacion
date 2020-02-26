@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Productos</title>
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container col-md-6 offset-md-3">
+    <div class="card border-dark  mt-3">
+        <div class="card-header bg-light text-dark text-center">
+            <h2>Lista de Productos</h2>
+            
+        </div>
+        <div class="card-body">
+            <a href="/addProduct" class="btn btn-success float-right ">Agregar</a>
+            <table class="table table-light mt-5 ">
+                <thead class="" style="background-color: beige;">
+                    <tr>
+                        <th scope="col">ID Producto</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in data %}
+                    <tr>
+                        <th scope="row">{{d.0}}</th>
+                        <td>{{d.1}}</td>
+                        <td>{{d.2}}</td>
+                        <td>
+                            <a href="/editProduct" class="btn btn-warning">Editar</a>
+                            <a href="/deletProduct" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if not data %}
+                <div class="alert alert-warning col-md text-center">No existen productos</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
