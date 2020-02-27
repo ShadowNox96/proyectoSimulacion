@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Simulador</title>
+{% endblock %}
+{% block body %}
+<div class="container mt-5 text-center">
+    <div class="card">
+        <div class="card-header"><h2><strong>Simulador</strong></h2></div>
+        <div class="card-body">
+            <form>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="PLl">Promedio de llegada</label>
+                        <input type="number" class="form-control" name="PLl" id="PLl" aria-describedby="HPLl">
+                        <small id="HPLl" class="form-text text-muted">Persona/hora</small>
+                    </div>
+                    <div class="form-group col">
+                        <label for="PS">Promedio de servicio</label>
+                        <input type="number" class="form-control" name="PS" id="PS" aria-describedby="HPS">
+                        <small id="HPS" class="form-text text-muted">Persona/hora</small>
+                    </div>
+                    <div class="form-group col">
+                        <label for="PS">Número de servidores</label>
+                        <input type="number" class="form-control" name="NS" id="NS">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="HS">Horas a simular</label>
+                        <input type="number" class="form-control" name="HS" id="HS">
+                    </div>
+                    <div class="form-group col">
+                        <label for="PP">Productos por personas</label>
+                        <input type="number" class="form-control" name="PP" id="PP">
+                    </div>
+                    <div class="form-group col">                        
+                    </div>           
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Empezar</button>
+                    </div>
+                    
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

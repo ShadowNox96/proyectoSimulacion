@@ -1,16 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>Productos</title>
+    <title>Costos</title>
 {% endblock %}
-
-
 
 {% block body %}
 <div class="container col-md-6 offset-md-3">
     <div class="card border-dark  mt-3">
         <div class="card-header bg-light text-dark text-center">
-            <h2>Lista de Productos </h2>
+            <h2>Lista de costos </h2>
             
         </div>
         <div class="card-body">
@@ -18,9 +16,10 @@
             <table class="table table-light mt-5 ">
                 <thead class="" style="background-color: beige;">
                     <tr>
-                        <th scope="col">ID Producto</th>
+                        <th scope="col">ID Costo</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Precio</th>
+                        <th scope="col">Tipo</th>
                         <th scope="col">Opciones</th>
                     </tr>
                 </thead>
@@ -30,6 +29,12 @@
                         <th scope="row">{{d.0}}</th>
                         <td>{{d.1}}</td>
                         <td>{{d.2}}</td>
+                        {% if d.3==0} 
+                        <td >Variable</td>
+                        {% else %}
+                        <td >Fijo</td>
+                        {% endif %}
+                        
                         <td>
                             <a href="/editProduct/{{d.0}}" class="btn btn-warning">Editar</a>
                             <a href="/deleteProduct/{{d.0}}" class="btn btn-danger">Eliminar</a>
@@ -45,5 +50,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

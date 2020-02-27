@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Nuevo Producto</title>
+{% endblock %}
+
+{% block body %}
+<div class="container col-md-6 offset-md-3 mt-3 ">
+    <div class="card text-center">
+        <div class="card-header">
+            <h2><strong>Nuevo producto</strong></h2>
+        </div>
+        <div class="card-body">
+            <form action="/nProduct" method="POST">
+                <div class="form-group col-md-4 offset-md-4">
+                    <label for="name" class="float-left"><strong>Nombre:</strong> </label>
+                    <input type="text" name="name" id="name" placeholder="Nombre"
+                        class="form-control  ">
+                </div>
+
+                
+                <div class="form-group col-md-4 offset-md-4">
+                    <label for="price" class="float-left"><strong>Precio: </strong> </label>
+                    <input type="text" name="price" id="price" placeholder="Precio"
+                        class="form-control  ">
+                </div>
+                
+                <div class="form-group col-md text-center">
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
