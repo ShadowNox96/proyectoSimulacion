@@ -71,7 +71,7 @@ def deleteProduct(id):
 def simulation():
     return render_template('simulacion.html')
 
-@app.route('/cost')
+@app.route('/costs')
 def listCosts():
     return render_template('costs.html')
 
