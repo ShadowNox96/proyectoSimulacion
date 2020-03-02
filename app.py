@@ -56,14 +56,14 @@ def saveProduct(id):
         price = request.form['price']
     
     cursor = mysql.get_db().cursor()
-    cursor.execute('UPDATE producto SET nomProducto = %s, precio=%s where idProducto = %s',(name,price,id))
+    cursor.execute('UPDATE producto SET nomProducto = %s, precio=%s WHERE idProducto = %s',(name,price,id))
     cursor.connection.commit()
     return redirect(url_for('listProducts'))
 
 @app.route('/deleteProduct/<id>')
 def deleteProduct(id):
     cursor = mysql.get_db().cursor()
-    cursor.execute('delete from producto where idProducto= %s',(id))
+    cursor.execute('DELETE FROM producto WHERE idProducto= %s',(id))
     cursor.connection.commit()
     return redirect(url_for('listProducts'))
 
