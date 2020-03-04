@@ -6,7 +6,7 @@ app.secret_key = 'Mysecret'
 
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = ''
+app.config['MYSQL_DATABASE_PASSWORD'] = 'Admin1234'
 app.config['MYSQL_DATABASE_DB'] = 'bdcafeteria'
 
 mysql = MySQL()
@@ -71,7 +71,7 @@ def deleteProduct(id):
 def simulation():
     return render_template('simulacion.html')
 
-@app.route('/cost')
+@app.route('/costs')
 def listCosts():
     return render_template('costs.html')
 
