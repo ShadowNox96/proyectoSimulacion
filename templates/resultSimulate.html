@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Resultados simulacion</title>
+{% endblock %}
+
+{% block body %}
+    <div class="container col-md-6 offset-md-3 text-center ">
+        <div class="card">
+            <div class="card-header">
+                <h2>Resultados Simulacion</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-ligth">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Hora de simulacion</th>
+                            <th scope="col">Persona</th>
+                            <th scope="col">Total Productos</th>
+                            <th scope="col">Productos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in data %}
+                        <tr>
+                            <td>{{d.0}}</td>
+                            <td>{{d.1}}</td>
+                            <td>{{d.2}}</td>
+                            <td>
+                            {% for x in d.3 %}
+                            {{x.0}} -  
+                            {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
