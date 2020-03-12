@@ -1,18 +1,23 @@
 import random
 
-def generateRandoms(PLl, PP, HS, data):
-    
-    ranPerson = range(PLl)
-    ranH = range(0, HS,1)
-    result =[]
-    
-    for x in ranH:
-        for y in ranPerson:
-            products = []
-            tProd = random.randint(1, PP)
-            ranProd = range(0,tProd,1)
-            result.append([x+1,y+1,tProd,products])
-            for p in ranProd:
-                prodRandom = random.randint(0,len(data)-1)
-                products.append(data[prodRandom])
-    return result
+def generateRandoms(x, PP, data):
+    rangePersons = range(x)
+    result = []
+    prod = ''
+    cost =0
+    totalCost =0
+    tdata = len(data)
+    for i in rangePersons:
+        products = range(random.randint(1,PP))
+        for j in products:
+            rd = random.randint(0,tdata-1)
+            d = data[rd][1]
+            prod = str(prod) + ',' + str(d)
+            cost = cost + data[rd][0]
+            totalCost = totalCost + cost
+        
+        result.append([i+1,prod,cost])
+        prod = ''
+        cost =0
+                
+    return result,totalCost
