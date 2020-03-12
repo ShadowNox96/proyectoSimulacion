@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template, url_for, request
 from flaskext.mysql import MySQL
+import functions as fn
 
 app = Flask(__name__)
 app.secret_key = 'Mysecret'
@@ -102,6 +103,28 @@ def addCost():
     cursor.execute('INSERT INTO costo (descripcion,precio,esfijo) VALUES(%s, %s,%s)', (desCost, price, x))
     cursor.connection.commit()
     return redirect(url_for('listCosts'))
+@app.route('/simulate', methods = ['POST'])
+def startSimulate():
+    if request.method == 'POST':
+        #promedio de llegadas
+        PLl = int(request.form['PLl'])
+        #promedio de servicio
+        PS = int(request.form['PS'])
+        #Numero de servidores
+        NS = int(request.form['NS'])
+        #Horas a simular
+        HS = int(request.form['HS'])
+        #Productos por personas
+        PP = int(request.form['PP'])
+
+        cursor = mysql.get_db().cursor()
+        query = 'SELECT nomProducto FROM producto'
+        cursor.execute(query)
+        data = cursor.fetchall()
+        result = fn.generateRandoms(PLl, PP, HS, data)
+    print(result)
+    return render_template('resultSimulate.html', data = result)
+
 
 @app.route('/getCost/<id>')
 def getCost(id):
