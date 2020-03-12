@@ -71,12 +71,75 @@ def deleteProduct(id):
 def simulation():
     return render_template('simulacion.html')
 
+#Controladores para costos
 @app.route('/costs')
 def listCosts():
-    return render_template('costs.html')
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM costo')
+    data = cursor.fetchall()
+    return render_template('costs.html', data = data)
 
+@app.route('/addCost')
+def nCost():
+    return render_template('nCost.html')
 
+@app.route('/nCost', methods =['POST'])
+def addCost():
+    x=0
+    if request.method == 'POST':
+        desCost = request.form['des']
+        price = float(request.form['price'])
+        
+        tipo = str(request.form.get('tipo'))
+        print(tipo)
+        if tipo=='Fijo':
+            x=1
+        else:
+            x=0
+        
+    
+    cursor = mysql.get_db().cursor()
+    cursor.execute('INSERT INTO costo (descripcion,precio,esfijo) VALUES(%s, %s,%s)', (desCost, price, x))
+    cursor.connection.commit()
+    return redirect(url_for('listCosts'))
 
+@app.route('/getCost/<id>')
+def getCost(id):
+    x=''
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM costo where idCosto = %s', [id])
+    data = cursor.fetchall()
+    print(data[0][3])
+    if data[0][3]==1: 
+        x='Fijo'
+    else:
+        x='Variable'
+    return render_template('editCost.html', data= data[0],x=x)
+
+@app.route('/editCost/<id>', methods=['POST'])
+def editCost(id):
+    x=0
+    if request.method == 'POST':
+        des = request.form['des']
+        price = request.form['price']
+        tipo= request.form['tipo']
+    
+        if tipo=='Fijo':
+            x=1
+        else:
+            x=0
+
+    cursor = mysql.get_db().cursor()
+    cursor.execute('UPDATE costo SET descripcion = %s, precio=%s, esFijo=%s WHERE idCosto = %s',(des,price,x,id))
+    cursor.connection.commit()
+    return redirect(url_for('listCosts'))
+
+@app.route('/deleteCost/<id>')
+def deleteCost(id):
+    cursor = mysql.get_db().cursor()
+    cursor.execute('DELETE FROM costo WHERE idCosto= %s',(id))
+    cursor.connection.commit()
+    return redirect(url_for('listCosts'))
 
 
 
