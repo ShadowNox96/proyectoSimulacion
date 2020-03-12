@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Editar Costo</title>
+{% endblock %}
+
+{% block body %}
+<div class="container col-md-6 offset-md-3 mt-3 ">
+    <div class="card text-center">
+        <div class="card-header">
+            <h2><strong>Editar Costo </strong></h2>
+        </div>
+        <div class="card-body">
+            <form action="/editCost/{{data.0}}" method="POST">
+                <div class="form-group col-md-4 offset-md-4">
+                    <label for="des" class="float-left"><strong>Descripción:</strong> </label>
+                    <input type="text" name="des" id="des" placeholder="Descripción" class="form-control" value="{{data.1}}">
+                </div>
+
+
+                <div class="form-group col-md-4 offset-md-4">
+                    <label for="price" class="float-left"><strong>Precio: </strong> </label>
+                    <input type="number" name="price" id="price" placeholder="Precio" class="form-control" value="{{data.2}}">
+                </div>
+                <div class="form-group col-md-4 offset-md-4">
+                    <select name="tipo" class="form-control form-control-md">
+                        <option>{{x}}</option>
+                        {% if  x =='Fijo' %}
+                        <option>Variable</option>
+                        {% else %}
+                        <option>Fijo</option>
+                        {%endif%}
+                      </select>
+                </div>
+                <div class="form-group col-md text-center">
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

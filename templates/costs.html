@@ -12,7 +12,7 @@
             
         </div>
         <div class="card-body">
-            <a href="/addCosts" class="btn btn-success float-right ">Agregar</a>
+            <a href="/addCost" class="btn btn-success float-right ">Agregar</a>
             <table class="table table-light mt-5 ">
                 <thead class="" style="background-color: beige;">
                     <tr>
@@ -36,8 +36,8 @@
                         {% endif %}
                         
                         <td>
-                            <a href="/editProduct/{{d.0}}" class="btn btn-warning">Editar</a>
-                            <a href="/deleteProduct/{{d.0}}" class="btn btn-danger">Eliminar</a>
+                            <a href="/getCost/{{d.0}}" class="btn btn-warning">Editar</a>
+                            <a href="/deleteCost/{{d.0}}" class="btn btn-danger">Eliminar</a>
                         </td>
                     </tr>
                     {% endfor %}

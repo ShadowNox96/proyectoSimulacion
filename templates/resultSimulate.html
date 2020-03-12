@@ -8,16 +8,20 @@
     <div class="container col-md-6 offset-md-3 text-center ">
         <div class="card">
             <div class="card-header">
-                <h2>Resultados Simulacion</h2>
+                <h2>Posibles Escenarios</h2>
             </div>
             <div class="card-body">
                 <table class="table table-ligth">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Hora de simulacion</th>
-                            <th scope="col">Persona</th>
-                            <th scope="col">Total Productos</th>
-                            <th scope="col">Productos</th>
+                            <th scope="col">No.</th>
+                            <th scope="col">Media</th>
+                            <th scope="col">Probabilidad</th>
+                            <th scope="col">Personas</th>
+                            <th scope="col">Costo por Hora</th>
+                            <th scope="col">Venta por Hora</th>
+                            <th scope="col">Utilidad</th>
+                            <th scope="col">Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,11 +30,16 @@
                             <td>{{d.0}}</td>
                             <td>{{d.1}}</td>
                             <td>{{d.2}}</td>
-                            <td>
-                            {% for x in d.3 %}
-                            {{x.0}} -  
-                            {% endfor %}
-                            </td>
+                            <td>{{d.3}}</td>
+                            <td>{{d.4}}</td>
+                            <td>{{d.7}}</td>
+                            {% if d.5 < 0%}
+                            <td style="background-color: red;">{{d.5}}</td>
+                            {% else %}
+                            <td style="background-color: green;">{{d.5}}</td>
+                            {% endif %}
+                            
+                            <td><a href="/viewDetail/{{d.0}}" class="btn btn-success btn-sm">Detalle</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>

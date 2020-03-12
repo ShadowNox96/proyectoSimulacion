@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Nuevo Costo</title>
+{% endblock %}
+
+{% block body %}
+<div class="container col-md-6 offset-md-3 mt-3 ">
+    <div class="card text-center">
+        <div class="card-header">
+            <h2><strong>Nuevo Costo</strong></h2>
+        </div>
+        <div class="card-body">
+            <form action="/nCost" method="POST">
+                <div class="form-group col-md-4 offset-md-4">
+                    <label for="des" class="float-left"><strong>Descripción:</strong> </label>
+                    <input type="text" name="des" id="des" placeholder="Descripción"
+                        class="form-control  ">
+                </div>
+
+                
+                <div class="form-group col-md-4 offset-md-4">
+                    <label for="price" class="float-left"><strong>Precio: </strong> </label>
+                    <input type="number" name="price" id="price" placeholder="Precio"
+                        class="form-control  ">
+                </div>
+                <div class="form-group col-md-4 offset-md-4">
+                    <select name="tipo" class="form-control form-control-md">
+                        <option>Fijo</option>
+                        <option>Variable</option>
+                      </select>
+                </div>
+                
+                <div class="form-group col-md text-center">
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -74,9 +74,37 @@ def deleteProduct(id):
 def simulation():
     return render_template('simulacion.html')
 
+#Controladores para costos
 @app.route('/costs')
 def listCosts():
-    return render_template('costs.html')
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM costo')
+    data = cursor.fetchall()
+    return render_template('costs.html', data = data)
+
+@app.route('/addCost')
+def nCost():
+    return render_template('nCost.html')
+
+@app.route('/nCost', methods =['POST'])
+def addCost():
+    x=0
+    if request.method == 'POST':
+        desCost = request.form['des']
+        price = float(request.form['price'])
+        
+        tipo = str(request.form.get('tipo'))
+        print(tipo)
+        if tipo=='Fijo':
+            x=1
+        else:
+            x=0
+        
+    
+    cursor = mysql.get_db().cursor()
+    cursor.execute('INSERT INTO costo (descripcion,precio,esfijo) VALUES(%s, %s,%s)', (desCost, price, x))
+    cursor.connection.commit()
+    return redirect(url_for('listCosts'))
 
 
 @app.route('/simulate', methods = ['POST'])
@@ -95,7 +123,6 @@ def startSimulate():
         #Productos por personas
         PP = int(request.form['PP'])
         
-        
         #Ingreso la nueva smulacion
         cursor.execute('INSERT into simulation(name) values(%s)', (name))
         cursor.connection.commit()
@@ -107,35 +134,84 @@ def startSimulate():
         #extraigo todos los costos de la bd 
         cursor.execute('SELECT SUM(precio) from costo')
         totalCost = cursor.fetchall()
-        totalCost = totalCost/30
-        totalCost = totalCost/8
+        
+        totalCost = totalCost[0][0]/30
+        totalCost = round((totalCost/8),2)
         #Extraigo todos los productos
         queryProducts = 'SELECT  precio,nomProducto FROM producto'
         cursor.execute(queryProducts)
         data = cursor.fetchall()
+        
 
         #Empiezo a generar los escenarios
         rangeHours = range(HS)
         for i in rangeHours:
             #numero de personas en este escenario
-            x = random.randint(1,PLl)
+            x = random.randint(1,PLl-1)
             #la media = PLLl
-            probability = (PLl**x)/factorial(x) * (e**PLl)
+            probability = round(((PLl**x)/(factorial(x) * (e**PLl))),10)
             result, totalSale = fn.generateRandoms(x,PP, data)
+            
             utility = totalSale - totalCost
+           
             #Ingreso el stage
-            cursor.execute('INSERT INTO stage(media,probability,persons,costHour,utility,idSimulation,totalHour) VALUES(%s,%s,%s,%s,%s,%s,%s)', x, probability,x,totalCost,utility,idSimulation,totalSale)
+            cursor.execute('INSERT INTO stage(media,probability,persons,costHour,utilityHour,idSimulation,totalHour) VALUES(%s,%s,%s,%s,%s,%s,%s)', (PLl, probability,x,totalCost,utility,idSimulation[0],totalSale))
             cursor.connection.commit()
             #Extraigo el ultimo stage 
             cursor.execute('SELECT idStage from stage order by(idStage) desc limit 1;') 
             idStage = cursor.fetchall()
             idStage = idStage[0]
-            for x in result:
-                cursor.execute('INSERT INTO detail(hour,personNumber,cost, products,idStage) VALUES(%s,%s,%s,%s,%s)',i,result[x][0], result[x][2], result[x][1], idStage)
+
+            # for para meter los resultados del detalle a la tabla
+            for x in range(0,len(result),1):
+                persons = int(result[x][0])
+                costs = float(result[x][2])
+                prods = str(result[x][1])
+                cursor.execute('INSERT INTO detail(hour,personNumber,cost, products,idStage) VALUES(%s,%s,%s,%s,%s)',(i+1, persons,costs,prods, idStage))
                 cursor.connection.commit()
-    return render_template('resultSimulate.html')
+            #extraigo todos los stage para mostrarlos
+            cursor.execute('SELECT * FROM stage where idSimulation =%s',(idSimulation))
+            ndata = cursor.fetchall()
+    return render_template('resultSimulate.html', data = ndata)
 
 
+@app.route('/getCost/<id>')
+def getCost(id):
+    x=''
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM costo where idCosto = %s', [id])
+    data = cursor.fetchall()
+    print(data[0][3])
+    if data[0][3]==1: 
+        x='Fijo'
+    else:
+        x='Variable'
+    return render_template('editCost.html', data= data[0],x=x)
+
+@app.route('/editCost/<id>', methods=['POST'])
+def editCost(id):
+    x=0
+    if request.method == 'POST':
+        des = request.form['des']
+        price = request.form['price']
+        tipo= request.form['tipo']
+    
+        if tipo=='Fijo':
+            x=1
+        else:
+            x=0
+
+    cursor = mysql.get_db().cursor()
+    cursor.execute('UPDATE costo SET descripcion = %s, precio=%s, esFijo=%s WHERE idCosto = %s',(des,price,x,id))
+    cursor.connection.commit()
+    return redirect(url_for('listCosts'))
+
+@app.route('/deleteCost/<id>')
+def deleteCost(id):
+    cursor = mysql.get_db().cursor()
+    cursor.execute('DELETE FROM costo WHERE idCosto= %s',(id))
+    cursor.connection.commit()
+    return redirect(url_for('listCosts'))
 
 
 
