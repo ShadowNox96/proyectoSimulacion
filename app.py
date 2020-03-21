@@ -172,7 +172,7 @@ def startSimulate():
             #extraigo todos los stage para mostrarlos
             cursor.execute('SELECT * FROM stage where idSimulation =%s',(idSimulation))
             ndata = cursor.fetchall()
-    return render_template('resultSimulate.html', data = ndata)
+    return render_template('resultSimulate.html', len= len(ndata), data=ndata)
 
 
 @app.route('/getCost/<id>')
@@ -213,10 +213,28 @@ def deleteCost(id):
     cursor.connection.commit()
     return redirect(url_for('listCosts'))
 
+#Administracion de las simulaciones
+@app.route('/admSimulation')
+def listSimulation():
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM simulation')
+    data = cursor.fetchall()
+    return render_template('admSimulation.html', data = data)
 
+@app.route('/getSimulation/<id>')
+def getViewSimulation(id):
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM stage where idSimulation = %s', [id])
+    data = cursor.fetchall()
+    #return render_template('viewSimulation.html', data= data)
+    return render_template('viewSimulation.html', len= len(data), data=data)
 
-
-
+@app.route('/getSDetail/<id>')
+def getViewDetail(id):
+    cursor = mysql.get_db().cursor()
+    cursor.execute('SELECT * FROM detail where idStage = %s', [id])
+    data = cursor.fetchall()
+    return render_template('viewDetail.html', data= data)
 
 
 

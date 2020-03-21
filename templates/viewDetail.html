@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Detalles simulacion</title>
+{% endblock %}
+
+{% block body %}
+<div class="container col-md-6 offset-md-3 text-center ">
+    <div class="card">
+        <div class="card-header">
+            <h2>Detalles del escenario</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-ligth">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">No. Persona</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Costo</th>
+                        <th scope="col">Productos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in data %}
+                    <tr>
+                        <td>{{d.2}}</td>
+                        <td>{{d.1}}</td>
+                        <td>{{d.3}}</td>
+                        <td>{{d.4}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

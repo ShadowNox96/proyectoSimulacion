@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Simulación</title>
+{% endblock %}
+
+{% block body %}
+<div class="container col-md-6 offset-md-3">
+    <div class="card border-dark  mt-3">
+        <div class="card-header bg-light text-dark text-center">
+            <h2>Lista de simulaciones</h2>
+            
+        </div>
+        <div class="card-body">
+            <a href="{{url_for('simulation')}}" class="btn btn-primary float-left ">Nueva simulación</a>
+            <table class="table table-light mt-5 ">
+                <thead class="" style="background-color: beige;">
+                    <tr>
+                        <th scope="col">ID Simulación</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in data %}
+                    <tr>
+                        <th scope="row">{{d.0}}</th>
+                        <td>{{d.1}}</td>
+                        
+                        <td>
+                            <a href="/getSimulation/{{d.0}}" class="btn btn-warning">Ver</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if not data %}
+                <div class="alert alert-warning col-md text-center">No existen registros de simulaciones</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
