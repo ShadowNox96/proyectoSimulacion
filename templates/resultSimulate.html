@@ -5,49 +5,63 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container col-md-6 offset-md-3 text-center ">
-        <div class="card">
-            <div class="card-header">
-                <h2>Posibles Escenarios</h2>
-            </div>
-            <div class="card-body">
-                <a href="/admSimulation" class="btn btn-primary float-left ">Regresar </a>
-                <br>
-                <br>
-                <table class="table table-ligth">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">No.</th>
-                            <th scope="col">Media</th>
-                            <th scope="col">Probabilidad</th>
-                            <th scope="col">Personas</th>
-                            <th scope="col">Costo por Hora</th>
-                            <th scope="col">Venta por Hora</th>
-                            <th scope="col">Utilidad</th>
-                            <th scope="col">Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {%for i in range(0, len)%} 
-                        <tr>
-                            <td>{{i+1}}</td>
-                            <td>{{data[i][1]}}</td>
-                            <td>{{data[i][2]}}</td>
-                            <td>{{data[i][3]}}</td>
-                            <td>{{data[i][4]}}</td>
-                            <td>{{data[i][7]}}</td>
-                            {% if data[i][5] < 0%}
-                            <td style="background-color: red;">{{data[i][5]}}</td>
-                            {% else %}
-                            <td style="background-color: green;">{{data[i][5]}}</td>
-                            {% endif %}
-                            
-                            <td><a href="/getSDetail/{{data[i][0]}}" class="btn btn-success btn-sm">Detalle</a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+<div class="container col-md text-center ">
+    <div class="card">
+        <div class="card-header">
+            <h2>Posibles Escenarios</h2>
+        </div>
+        <div class="card-body">
+            <a href="/admSimulation" class="btn btn-primary float-left ">Regresar </a>
+            <br>
+            <br>
+            <table class="table table-ligth">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Media</th>
+                        <th scope="col">Probabilidad</th>
+                        <th scope="col">Personas</th>
+                        <th scope="col">Costo por Hora</th>
+                        <th scope="col">Venta por Hora</th>
+                        <th scope="col">Utilidad</th>
+                        <th scope="col">Ritmo del servicio</th>
+                        <th scope="col">Tiempo de servicio</th>
+                        <th scope="col">Tiempo de llegada</th>
+                        <th scope="col">Clientes en cola</th>
+                        <th scope="col">Tiempo en cola</th>
+                        <th scope="col">Clientes en el sistema</th>
+                        <th scope="col">Tiempo en el sistema</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for i in range(0, len)%}
+                    <tr>
+                        <td>{{i+1}}</td>
+                        <td>{{data[i][1]}}</td>
+                        <td>{{data[i][2]}}</td>
+                        <td>{{data[i][3]}}</td>
+                        <td>{{data[i][4]}}</td>
+                        <td>{{data[i][7]}}</td>
+                        {% if data[i][5] < 0%}
+                        <td style="background-color: red;">{{data[i][5]}}</td>
+                        {% else %}
+                        <td style="background-color: green;">{{data[i][5]}}</td>
+                        {% endif %}
+                        <td>{{data[i][8]}}</td>
+                        <td>{{data[i][9]}}</td>
+                        <td>{{data[i][10]}}</td>
+                        <td>{{data[i][11]}}</td>
+                        <td>{{data[i][12]}}</td>
+                        <td>{{data[i][13]}}</td>
+                        <td>{{data[i][14]}}</td>
+
+                        <td><a href="/getSDetail/{{data[i][0]}}" class="btn btn-success btn-sm">Detalle</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 {% endblock %}
