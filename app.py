@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for, request
+from flask import Flask, redirect, render_template, url_for, request, flash
 from flaskext.mysql import MySQL
 import functions as fn
 import random
@@ -185,6 +185,8 @@ def startSimulate():
             cursor.execute(
                 'SELECT * FROM stage where idSimulation =%s', (idSimulation))
             ndata = cursor.fetchall()
+        if PS < PLl:
+            flash('El ritmo de servicio es menor a la tasa de llegada, su sistema se esta convirtiendo en infinito, considere aumentar el numero de servidores')
     return render_template('resultSimulate.html', len=len(ndata), data=ndata)
 
 
