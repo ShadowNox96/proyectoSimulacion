@@ -131,63 +131,71 @@ def startSimulate():
         HS = int(request.form['HS'])
         # Productos por personas
         PP = int(request.form['PP'])
-
-        # Ingreso la nueva smulacion
-        cursor.execute('INSERT into simulation(name) values(%s)', (name))
-        cursor.connection.commit()
-
-        # Extraigo el id de la simulacion que se acaba de ingresar
-        cursor.execute(
-            'SELECT idSimulation from simulation where name=%s', (name))
-        idSimulation = cursor.fetchall()
-
-        # extraigo todos los costos de la bd
-        cursor.execute('SELECT SUM(precio) from costo')
-        totalCost = cursor.fetchall()
-
-        totalCost = totalCost[0][0]/30
-        totalCost = round((totalCost/8), 2)
-        # Extraigo todos los productos
-        queryProducts = 'SELECT  precio,nomProducto FROM producto'
-        cursor.execute(queryProducts)
-        data = cursor.fetchall()
-
-        # Empiezo a generar los escenarios
-        rangeHours = range(HS)
-        for i in rangeHours:
-            # numero de personas en este escenario
-            x = random.randint(1, PLl-1)
-            # la media = PLLl
-            probability = round(((PLl**x)/(factorial(x) * (e**PLl))), 10)
-            result, totalSale = fn.generateRandoms(x, PP, data)
-
-            utility = totalSale - totalCost
-            lq, wq, ls, ws, tllegada, tservicio = fn.colasdeEspera(x, PS)
-            # Ingreso el stage
-            cursor.execute('INSERT INTO stage(media,probability,persons,costHour,utilityHour,idSimulation,totalHour,ritmoServicio,tpServicio,tpLlegada,nClienteCola,tCola,nClienteSistema,tSistema) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
-                           (PLl, probability, x, totalCost, utility, idSimulation[0], totalSale, PS, tservicio, tllegada, lq, wq, ls, ws))
-            cursor.connection.commit()
-            # Extraigo el ultimo stage
-            cursor.execute(
-                'SELECT idStage from stage order by(idStage) desc limit 1;')
-            idStage = cursor.fetchall()
-            idStage = idStage[0]
-
-            # for para meter los resultados del detalle a la tabla
-            for x in range(0, len(result), 1):
-                persons = int(result[x][0])
-                costs = float(result[x][2])
-                prods = str(result[x][1])
-                cursor.execute('INSERT INTO detail(hour,personNumber,cost, products,idStage) VALUES(%s,%s,%s,%s,%s)', (
-                    i+1, persons, costs, prods, idStage))
-                cursor.connection.commit()
-            # extraigo todos los stage para mostrarlos
-            cursor.execute(
-                'SELECT * FROM stage where idSimulation =%s', (idSimulation))
-            ndata = cursor.fetchall()
         if PS < PLl:
-            flash('El ritmo de servicio es menor a la tasa de llegada, su sistema se esta convirtiendo en infinito, considere aumentar el numero de servidores')
-    return render_template('resultSimulate.html', len=len(ndata), data=ndata)
+            flash('El ritmo de servicio es menor a la tasa de llegada, su sistema se esta convirtiendo en infinito, NO SE PUEDE SIMULAR!')
+            return render_template('resultSimulate.html')
+        else:
+            # Ingreso la nueva smulacion
+            cursor.execute('INSERT into simulation(name) values(%s)', (name))
+            cursor.connection.commit()
+
+            # Extraigo el id de la simulacion que se acaba de ingresar
+            cursor.execute(
+                'SELECT idSimulation from simulation where name=%s', (name))
+            idSimulation = cursor.fetchall()
+
+            # extraigo todos los costos de la bd
+            cursor.execute('SELECT SUM(precio) from costo')
+            totalCost = cursor.fetchall()
+
+            totalCost = totalCost[0][0]/30
+            totalCost = round((totalCost/8), 2)
+            # Extraigo todos los productos
+            queryProducts = 'SELECT  precio,nomProducto FROM producto'
+            cursor.execute(queryProducts)
+            data = cursor.fetchall()
+
+            # Empiezo a generar los escenarios
+            rangeHours = range(HS)
+            for i in rangeHours:
+                # numero de personas en este escenario
+                x = random.randint(1, PLl-1)
+                # la media = PLLl
+                probability = round(((PLl**x)/(factorial(x) * (e**PLl))), 10)
+                result, totalSale = fn.generateRandoms(x, PP, data)
+
+                utility = totalSale - totalCost
+                lq, wq, ls, ws, tllegada, tservicio = fn.colasdeEspera(x, PS)
+                # Ingreso el stage
+                cursor.execute('INSERT INTO stage(media,probability,persons,costHour,utilityHour,idSimulation,totalHour,ritmoServicio,tpServicio,tpLlegada,nClienteCola,tCola,nClienteSistema,tSistema) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+                            (PLl, probability, x, totalCost, utility, idSimulation[0], totalSale, PS, tservicio, tllegada, lq, wq, ls, ws))
+                cursor.connection.commit()
+                # Extraigo el ultimo stage
+                cursor.execute(
+                    'SELECT idStage from stage order by(idStage) desc limit 1;')
+                idStage = cursor.fetchall()
+                idStage = idStage[0]
+
+                # for para meter los resultados del detalle a la tabla
+                for x in range(0, len(result), 1):
+                    persons = int(result[x][0])
+                    costs = float(result[x][2])
+                    prods = str(result[x][1])
+                    cursor.execute('INSERT INTO detail(hour,personNumber,cost, products,idStage) VALUES(%s,%s,%s,%s,%s)', (
+                        i+1, persons, costs, prods, idStage))
+                    cursor.connection.commit()
+                # extraigo todos los stage para mostrarlos
+                cursor.execute(
+                    'SELECT * FROM stage where idSimulation =%s', (idSimulation))
+                ndata = cursor.fetchall()
+                # Variables para asignarle los datos de la grafica
+                graphics = []
+                count = 1
+                # Recorro los datos y solo saco la hora, probabilidad y demas
+                for x in ndata:
+                    graphics.append([count,float(x[2]),float(x[5]),int(x[3])])
+                    count +=1
+            return render_template('resultSimulate.html', len=len(ndata), data=ndata, graphics= graphics)
 
 
 @app.route('/getCost/<id>')
@@ -234,19 +242,27 @@ def deleteCost(id):
 # Administracion de las simulaciones
 @app.route('/admSimulation')
 def listSimulation():
+    data = []
     cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM simulation')
+    cursor.execute('SELECT * FROM simulation order by idSimulation desc')
     data = cursor.fetchall()
     return render_template('admSimulation.html', data=data)
 
 
 @app.route('/getSimulation/<id>')
 def getViewSimulation(id):
+    graphics = []
+    count = 1
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM stage where idSimulation = %s', [id])
     data = cursor.fetchall()
+    for x in data:
+        graphics.append([count,float(x[2]),float(x[5]),int(x[3])])
+        count +=1
+
+    print(graphics)
     # return render_template('viewSimulation.html', data= data)
-    return render_template('viewSimulation.html', len=len(data), data=data)
+    return render_template('viewSimulation.html', len=len(data), data=data, graphics= graphics)
 
 
 @app.route('/getSDetail/<id>')

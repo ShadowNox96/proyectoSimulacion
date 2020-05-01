@@ -60,7 +60,59 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <h5 class="data" hidden>{{graphics}}</h5>
+
+            <div id="curve_chart" class="offset-md-1" style="width: 1500px; height: 850px"></div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['line']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var horas =[];
+        var h1Text = document.querySelector(".data").textContent;
+        h1Text = JSON.parse(h1Text);
+        console.log(h1Text);
+        
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Horas')
+        data.addColumn('number', 'Probabilidad');
+        data.addColumn('number', 'Utilidad');
+        data.addColumn('number','Personas')
+
+        
+        for(var x=0; x < h1Text.length; x++){
+            
+            data.addRows([
+                
+                h1Text[x]
+            ]);
+        }
+
+      var options = {
+        chart: {
+          title: 'Gráfica de Resumen',
+          subtitle: 'Relación Horas, Personas, Utilidad y Probabilidad'
+        },
+        titleTextStyle:{
+            fontSize: 24,
+            bold: true
+        },
+        animation:{
+            duration: 1,
+            startup: true
+        },
+        fontSize: 20,
+        width: 1000,
+        height: 600,
+        hAxis: {title: 'Horas', titleTextStyle: {fontSize: 30}}
+      };
+      var chart = new google.charts.Line(document.getElementById('curve_chart'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+  </script>
 {% endblock %}
