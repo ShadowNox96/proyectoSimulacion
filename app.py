@@ -191,11 +191,13 @@ def startSimulate():
                 # Variables para asignarle los datos de la grafica
                 graphics = []
                 count = 1
+                total = 0
                 # Recorro los datos y solo saco la hora, probabilidad y demas
                 for x in ndata:
                     graphics.append([count,float(x[2]),float(x[5]),int(x[3])])
+                    total = total+x[5]
                     count +=1
-            return render_template('resultSimulate.html', len=len(ndata), data=ndata, graphics= graphics)
+            return render_template('resultSimulate.html', len=len(ndata), data=ndata, graphics= graphics, total= total)
 
 
 @app.route('/getCost/<id>')
@@ -253,16 +255,18 @@ def listSimulation():
 def getViewSimulation(id):
     graphics = []
     count = 1
+    total = 0
     cursor = mysql.get_db().cursor()
     cursor.execute('SELECT * FROM stage where idSimulation = %s', [id])
     data = cursor.fetchall()
     for x in data:
         graphics.append([count,float(x[2]),float(x[5]),int(x[3])])
+        total= total+x[5]
         count +=1
 
     print(graphics)
     # return render_template('viewSimulation.html', data= data)
-    return render_template('viewSimulation.html', len=len(data), data=data, graphics= graphics)
+    return render_template('viewSimulation.html', len=len(data), data=data, graphics= graphics, total= total)
 
 
 @app.route('/getSDetail/<id>')
